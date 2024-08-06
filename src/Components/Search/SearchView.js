@@ -75,6 +75,7 @@ class SearchView extends React.Component {
       provList: [],
       prefList: [],
       countyList: [],
+      sql_data: [],
       //FILTER VALUES
       label: "",
       nationality: "",

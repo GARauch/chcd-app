@@ -47,6 +47,34 @@ export function fetchSearch() {
     const session = this.driver.session();
     const searchProp = this.state.search.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ");
 
+    // TESTING SQL QUERY HERE 
+    try {
+      const query = `SELECT id FROM people LIMIT 10`;
+      fetch(`http://localhost:3001/data?q=${encodeURIComponent(query)}`)
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(errorData => {
+              throw new Error(`Server error: ${response.status} - ${errorData.error}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.length > 0) {
+            console.log('Results:', data);
+          } else {
+            console.log('No results');
+          }
+        })
+        .catch(error => {
+          console.error("Error Fetching data:", error.message);
+        });
+
+      console.log('Testing SQL Server');
+    } catch (error) {
+      console.error("Unexpected Error:", error);
+    }
+
     const query = `
   CALL db.index.fulltext.queryNodes("allPropIndex", "`+ searchProp + `~") YIELD node
   WITH node MATCH (node)-[t]-(m) 
